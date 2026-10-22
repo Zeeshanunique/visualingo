@@ -1,26 +1,171 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink: #0e2a2b;
+  --sea: #1f6f6a;
+  --sand: #e8e2d6;
+  --fog: #f3eee4;
+  --coral: #e06b5c;
+  --ok: #2f6b4f;
+  --background: var(--sand);
+  --foreground: var(--ink);
 }
 
 @theme inline {
+  --color-ink: var(--ink);
+  --color-sea: var(--sea);
+  --color-sand: var(--sand);
+  --color-fog: var(--fog);
+  --color-coral: var(--coral);
+  --color-ok: var(--ok);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-outfit);
+  --font-display: var(--font-fraunces);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-outfit), system-ui, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-fraunces), Georgia, serif;
+}
+
+/* Soft atmosphere — grain + radial wash */
+.app-shell {
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(31, 111, 106, 0.12), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 90% 80%, rgba(224, 107, 92, 0.08), transparent 50%),
+    var(--sand);
+  position: relative;
+}
+
+.app-shell::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+  z-index: 0;
+}
+
+.app-shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes pulse-listen {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(224, 107, 92, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(224, 107, 92, 0);
+  }
+}
+
+@keyframes media-in {
+  from {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-in-answer {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-pulse-listen {
+  animation: pulse-listen 1.4s ease-out infinite;
+}
+
+.animate-media-in {
+  animation: media-in 0.45s ease-out both;
+}
+
+.animate-fade-in-answer {
+  animation: fade-in-answer 0.4s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-listen,
+  .animate-media-in,
+  .animate-fade-in-answer {
+    animation: none;
+  }
+}
+
+/* Gemini answers often include markdown — render cleanly in the rail */
+.answer-md > :first-child {
+  margin-top: 0;
+}
+
+.answer-md > :last-child {
+  margin-bottom: 0;
+}
+
+.answer-md p {
+  margin: 0.65em 0;
+}
+
+.answer-md strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.answer-md ul,
+.answer-md ol {
+  margin: 0.65em 0;
+  padding-left: 1.25rem;
+}
+
+.answer-md ul {
+  list-style: disc;
+}
+
+.answer-md ol {
+  list-style: decimal;
+}
+
+.answer-md li {
+  margin: 0.35em 0;
+}
+
+.answer-md li > p {
+  margin: 0.25em 0;
+}
+
+.answer-md h1,
+.answer-md h2,
+.answer-md h3 {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 600;
+  margin: 0.85em 0 0.4em;
+  line-height: 1.3;
+}
+
+.answer-md h1 {
+  font-size: 1.15em;
+}
+
+.answer-md h2,
+.answer-md h3 {
+  font-size: 1.05em;
 }
